@@ -8,7 +8,7 @@ yarn-error.log*
 .firebase
 firebase.json
 .firebaserc
-/static
+/static/
 .editorconfig
 .babelrc
 .postcssrc.js
