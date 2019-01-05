@@ -26,7 +26,7 @@
 
     data () {
       return {
-       newMessage: null,
+       newMessage: '',
        collectionObject: {},
        isTyping: false,
        emojis: ['&#x1F600;', '&#x1F601;', '&#x1F602;', '&#x1F923;', '&#x1F603;', '&#x1F604;', '&#x1F605;', '&#x1F606;', '&#x1F609;', '&#x1F60A;', '&#x1F60B;', '&#x1F60E;','&#x1F60D;', '&#x1F618;', '&#x1F617;', '&#x1F619;', '&#x1F61A;', '&#x1F642;', '&#x1F917;', '&#x1F914;', '&#x1F644;', '&#x1F60F;', '&#x1F634;', '&#x1F632;'],
