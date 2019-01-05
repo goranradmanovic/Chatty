@@ -14,10 +14,6 @@
     <div class="emojis" v-if="emojiOpen">
       <p v-for="emoji in emojis" :value="emoji" @click="getEmoji($event)" class="emojis__item">{{ emoji | decodeURIString }}</p>
     </div>
-
-    <audio class="message__sound" ref="messagesound">
-      <source src="../assets/sounds/message.mp3" type="audio/mpeg">
-    </audio>
   </div>
 </template>
 
@@ -26,7 +22,6 @@
 
   export default {
     name: 'NewMessage',
-
     props: ['name'],
 
     data () {
@@ -34,20 +29,20 @@
        newMessage: null,
        collectionObject: {},
        isTyping: false,
-       emojis: ['&#x1F600;', '&#x1F601;', '&#x1F602;', '&#x1F923;', '&#x1F603;', '&#x1F604;', '&#x1F605;', '&#x1F606;', '&#x1F609;', '&#x1F60A;', '&#x1F60B;', '&#x1F60E;',
-              '&#x1F60D;', '&#x1F618;', '&#x1F617;', '&#x1F619;', '&#x1F61A;', '&#x1F642;', '&#x1F917;', '&#x1F914;', '&#x1F644;', '&#x1F60F;', '&#x1F634;', '&#x1F632;'],
+       emojis: ['&#x1F600;', '&#x1F601;', '&#x1F602;', '&#x1F923;', '&#x1F603;', '&#x1F604;', '&#x1F605;', '&#x1F606;', '&#x1F609;', '&#x1F60A;', '&#x1F60B;', '&#x1F60E;','&#x1F60D;', '&#x1F618;', '&#x1F617;', '&#x1F619;', '&#x1F61A;', '&#x1F642;', '&#x1F917;', '&#x1F914;', '&#x1F644;', '&#x1F60F;', '&#x1F634;', '&#x1F632;'],
        emojiOpen: false,
-       elementID: false,
       }
     },
 
     filters: {
+      //Decode emoji hexa string
 			decodeURIString(str) {
 				return he.decode(str); //Decode string from DB with html enteties to properly display on the page
 			}
 		},
 
     methods: {
+      //Add message to DB
       addMessage() {
         //Collection object
         this.collectionObject = {
@@ -57,18 +52,18 @@
         }
 
         //Add new message to the DB
-        db.collection('messages').add(this.collectionObject).then(response => this.scrollToMessage(response.id));
+        db.collection('messages').add(this.collectionObject);
 
         this.newMessage = '';
         //this.$el.reset(); //Reset the form
       },
 
+      //Detect when user is typing
       detectUserTyping(event) {
         // intercept the keydown event
 
           // if the RETURN/ENTER key is pressed, send the message
           if (event.keyCode === 13) {
-            this.playNotificationSound();
             this.isTyping = false;
           } else {
             // else send the Typing Indicator signal
@@ -76,23 +71,15 @@
           }
       },
 
-      playNotificationSound() {
-        this.$refs.messagesound.play();
-      },
-
+      //Get user selected emoji
       getEmoji(event) {
         this.newMessage += event.target.textContent;
       },
 
+      //Open emoji modal
       openEmojiModal() {
         this.emojiOpen = !this.emojiOpen;
       },
-
-      scrollToMessage(id) {
-        this.elementID = document.getElementById(id);
-
-        this.elementID.scrollIntoView();
-      }
     },
   }
 </script>
