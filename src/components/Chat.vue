@@ -1,14 +1,18 @@
 <template>
 	<div class="chat">
+		<audio class="message__sound" ref="messagesound">
+			<source src="../assets/sounds/message.mp3" type="audio/mpeg">
+		</audio>
+		
 		<h2 class="chat__title">Say something ...</h2>
 
 		<div class="chat__box">
 			<ul class="chat__box--list" v-if="messages.length > 0">
-				<li v-for="message in messages" :data-id="message.id" class="chat__box--list--item" :id="message.id">
+				<li v-for="message in sortMessageByTime" :data-id="message.id" class="chat__box--list--item" :id="message.id">
 					<img src="https://www.gravatar.com/avatar/00000000000000000000000000000000" alt="Gravatar.jpg" title="Generic user image" class="chat__box--list--item--avatar">
 					<div class="chat__box--list--item--username">{{ message.name }}</div>
 					<i class="fas fa-times chat__box--list--item--closebtn" @click="deleteMessage" title="Delete message"></i>
-					<div class="chat__box--list--item--text">{{ message.message | decodeURIString }}</div>
+					<div class="chat__box--list--item--text">{{ message.message }}</div>
 					<div class="chat__box--list--item--time"><time :datetime="message.time | formatDate">{{ message.time | formatDate }}</time></div>
 				</li>
 			</ul>
@@ -35,34 +39,36 @@
 			return {
 				messages: [],
 				changes: null,
-				documentId: null
+				documentId: null,
+				elementID: null,
+				lastElementID: null
 			}
 		},
 
 		filters: {
+			//Format date
 			formatDate(value) {
 				//return moment(Number(value)).format('MMMM Do YYYY, h:mm:ss a'); //Format date
 				return moment(Number(value)).fromNow();; //Format date (relative time)
 			},
-
-			decodeURIString(str) {
-				return he.decode(str); //Decode string from DB with html enteties to properly display on the page
-			}
 		},
 
 		methods: {
+			//Create message object and push to the message array
 			renderMessagesList(docId, docData) {
 				this.documentId = {id: docId}; //Create document ID object
 
 				this.messages.push(Object.assign(this.documentId, docData)); //Assign document ID object to the message object and push to message array
 			},
 
+			//Delete message from DB
 			deleteMessage(event) {
 				this.documentId = event.target.parentElement.dataset.id; //Get document ID
 
 				db.collection('messages').doc(this.documentId).delete(); //Delete message from DB
 			},
 
+			//Remove message object from messages array after message object is deleted from DB
 			updateMessagesList(id) {
 				if (id) {
 					//Filter thrught message array and remove object with equal ID with deleted document id from DB
@@ -72,6 +78,26 @@
 				}
 				return;
 			},
+
+			//Play notification sound when message is recived
+			playNotificationSound() {
+				this.$refs.messagesound.play();
+			},
+
+			//Scroll the last message into client view
+			scrollToMessage(id) {
+
+				setTimeout(function() {
+					document.getElementById(id).scrollIntoView();
+				}, 0);
+			}
+		},
+
+		computed: {
+			//Sortmessages by time
+			sortMessageByTime() {
+				return this.messages.sort((obj1, obj2) => obj1.time - obj2.time);
+			}
 		},
 
 		created() {
@@ -80,14 +106,16 @@
 
 				this.changes = snapshot.docChanges();
 
-				this.changes.forEach(change => {
+				this.changes.forEach(change => {	
 
 					if (change.type == 'added') {
 						this.renderMessagesList(change.doc.id, change.doc.data());
+						this.playNotificationSound();
+						this.scrollToMessage(change.doc.id);
 					} else if (change.type == 'modified') {
-							console.log('modified')
+						console.log('modified')
 					} else if (change.type == 'removed') {
-							this.updateMessagesList(this.documentId);
+						this.updateMessagesList(this.documentId);
 					}
 				});
 			});
