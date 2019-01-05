@@ -2,7 +2,7 @@
   <div class="message">
     <form @submit.prevent="addMessage" class="message__form">
       <i class="far fa-comment-alt message__form--icon"></i>
-      <span class="message__form--typingdots" ref="typing-indicator" :class="(isTyping) ? 'typing' : '' "><span>.</span><span>.</span><span>.</span></span>
+      <span class="message__form--typingdots" ref="typing-indicator" :class="(isTyping) ? 'typing' : ''"><span>.</span><span>.</span><span>.</span></span>
 
       <input type="text" class="message__form--input" placeholder="Hello World ... (press enter)" v-model="newMessage" @keydown="detectUserTyping">
 
