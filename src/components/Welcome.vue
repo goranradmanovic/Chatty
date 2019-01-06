@@ -10,12 +10,19 @@
       <p v-if="feedback" class="grid__login--form--error">{{ feedback }}</p> <!--Output feedback if feedback is true-->
       <button class="grid__login--form--button" title="Enter Chatty"><i class="far fa-comments"></i></button>
     </form>
+
+    <Footer/>
   </div>
 </template>
 
 <script>
+  import Footer from '@/components/Footer.vue';
+
   export default {
     name: 'Welcome',
+    components: {
+      Footer
+    },
     data () {
       return {
         name: null,

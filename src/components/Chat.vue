@@ -21,19 +21,23 @@
 		<div class="chat__input">
 			<NewMessage :name="name"/> <!--Passing name of the user to this component-->
 		</div>
+
+		<Footer/>
 	</div>
 </template>
 
 <script>
 
 	import NewMessage from '@/components/NewMessage';
+	import Footer from '@/components/Footer';
 	import db from '@/firebase/init';
 
 	export default {
 		name: 'Chat',
 		props: ['name'], //Parameters (props) that we accept in this component
 		components: {
-			NewMessage
+			NewMessage,
+			Footer
 		},
 		data() {
 			return {
@@ -126,10 +130,10 @@
 <style>
 	.chat {
 		grid-column: 2 / 3;
-    grid-row: auto;
-    justify-self: center;
-    align-self: center;
-    width: 100%;
+		grid-row: auto;
+		justify-self: center;
+		align-self: center;
+		width: 100%;
 	}
 
 	.chat__title {

@@ -22,7 +22,7 @@
 
   export default {
     name: 'NewMessage',
-    props: ['name'],
+    props: ['name'], //Input value from welcome comp. (name of the user)
 
     data () {
       return {
