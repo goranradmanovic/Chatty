@@ -174,8 +174,6 @@
 	}
 
 	.chat__box--list--item:nth-child(even) {
-		width: 98%;
-		margin-left: 2%;
 		background-color: #F8F8F8;
 	}
 
